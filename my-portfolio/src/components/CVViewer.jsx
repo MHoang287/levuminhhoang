@@ -88,7 +88,7 @@ export default function CVViewer() {
 
                 <div className="flex items-center gap-4">
                   <a
-                    href="/cv/LeVuMinhHoang_CV.pdf"
+                    href="cv/LeVuMinhHoang_CV.pdf"
                     download
                     className="flex items-center gap-2 px-6 py-3 rounded-xl transition-all duration-300 border text-[10px] font-black uppercase tracking-widest group"
                     style={{ 
@@ -102,7 +102,7 @@ export default function CVViewer() {
                   </a>
 
                   <a
-                    href="/cv/LeVuMinhHoang_CV.pdf"
+                    href="cv/LeVuMinhHoang_CV.pdf"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-10 h-10 flex items-center justify-center rounded-xl border transition-all duration-300"
@@ -138,7 +138,7 @@ export default function CVViewer() {
                     }}
                   >
                     <iframe
-                      src="/cv/LeVuMinhHoang_CV.pdf#view=FitH&toolbar=0"
+                      src="cv/LeVuMinhHoang_CV.pdf#view=FitH&toolbar=0"
                       className="w-full h-full border-none shadow-inner"
                       title="CV Document Full Screen"
                     />
