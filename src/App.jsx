@@ -255,45 +255,7 @@ function App() {
             </motion.div>
 
             {/* Block 4: Spotify */}
-            <motion.div
-              variants={itemVariants}
-              className="col-span-1 lg:col-span-1 bento-card group overflow-hidden min-h-[180px] relative cursor-pointer"
-            >
-              <div className="absolute inset-0 z-10 p-6 md:p-8 flex flex-col justify-between bg-[var(--card-bg)] backdrop-blur-xl">
-                <div className="flex justify-between items-start">
-                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-[#1DB954]/10 flex items-center justify-center border border-[#1DB954]/20">
-                    <Music className="w-5 h-5 md:w-6 md:h-6 text-[#1DB954]" />
-                  </div>
-                  <div className="flex items-center gap-1.5 px-2 py-1 bg-[#1DB954]/10 rounded-full border border-[#1DB954]/20">
-                    <span className="flex gap-0.5">
-                      <span className="w-0.5 h-2 bg-[#1DB954] animate-[music-bar_0.8s_ease-in-out_infinite]"></span>
-                      <span className="w-0.5 h-3 bg-[#1DB954] animate-[music-bar_1.2s_ease-in-out_infinite]"></span>
-                      <span className="w-0.5 h-2 bg-[#1DB954] animate-[music-bar_1s_ease-in-out_infinite]"></span>
-                    </span>
-                    <span className="text-[8px] font-black text-[#1DB954] uppercase tracking-widest">{t.spotifyPlaying}</span>
-                  </div>
-                </div>
-                <div>
-                  <p className="text-[10px] text-[var(--text-muted)] uppercase font-black tracking-widest mb-1 transition-colors">{t.spotifyTitle}</p>
-                  <h3 className="text-lg md:text-xl font-black leading-tight text-[var(--text-primary)] transition-colors truncate">{t.spotifySong}</h3>
-                  <p className="text-xs text-[var(--text-secondary)] font-medium transition-colors">{t.spotifyArtist}</p>
-                </div>
-              </div>
-              
-              {/* Load Spotify player dynamically only on hover/click to completely bypass initial network freeze/504 errors */}
-              <div className="w-full h-full absolute inset-0 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center bg-black/80">
-                <iframe 
-                  src="https://open.spotify.com/embed/track/6ELX356o21U28T73ZxruUj?utm_source=generator&theme=0" 
-                  width="100%" 
-                  height="100%" 
-                  frameBorder="0" 
-                  allowFullScreen="" 
-                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-                  loading="lazy"
-                  className="w-full h-full border-none"
-                ></iframe>
-              </div>
-            </motion.div>
+            <SpotifyCard t={t} itemVariants={itemVariants} />
 
             {/* Block 5: Terminal */}
             <motion.div
@@ -348,3 +310,53 @@ function App() {
 }
 
 export default App;
+
+function SpotifyCard({ t, itemVariants }) {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <motion.div
+      variants={itemVariants}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="col-span-1 lg:col-span-1 bento-card group overflow-hidden min-h-[180px] relative cursor-pointer"
+    >
+      <div className="absolute inset-0 z-10 p-6 md:p-8 flex flex-col justify-between bg-[var(--card-bg)] backdrop-blur-xl">
+        <div className="flex justify-between items-start">
+          <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-[#1DB954]/10 flex items-center justify-center border border-[#1DB954]/20">
+            <Music className="w-5 h-5 md:w-6 md:h-6 text-[#1DB954]" />
+          </div>
+          <div className="flex items-center gap-1.5 px-2 py-1 bg-[#1DB954]/10 rounded-full border border-[#1DB954]/20">
+            <span className="flex gap-0.5">
+              <span className="w-0.5 h-2 bg-[#1DB954] animate-[music-bar_0.8s_ease-in-out_infinite]"></span>
+              <span className="w-0.5 h-3 bg-[#1DB954] animate-[music-bar_1.2s_ease-in-out_infinite]"></span>
+              <span className="w-0.5 h-2 bg-[#1DB954] animate-[music-bar_1s_ease-in-out_infinite]"></span>
+            </span>
+            <span className="text-[8px] font-black text-[#1DB954] uppercase tracking-widest">{t.spotifyPlaying}</span>
+          </div>
+        </div>
+        <div>
+          <p className="text-[10px] text-[var(--text-muted)] uppercase font-black tracking-widest mb-1 transition-colors">{t.spotifyTitle}</p>
+          <h3 className="text-lg md:text-xl font-black leading-tight text-[var(--text-primary)] transition-colors truncate">{t.spotifySong}</h3>
+          <p className="text-xs text-[var(--text-secondary)] font-medium transition-colors">{t.spotifyArtist}</p>
+        </div>
+      </div>
+      
+      {/* Conditionally mount iframe only when isHovered is true, completely avoiding PlayReady check/error on startup */}
+      <div className="w-full h-full absolute inset-0 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center bg-black/80">
+        {isHovered && (
+          <iframe 
+            src="https://open.spotify.com/embed/track/6ELX356o21U28T73ZxruUj?utm_source=generator&theme=0" 
+            width="100%" 
+            height="100%" 
+            frameBorder="0" 
+            allowFullScreen="" 
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+            loading="lazy"
+            className="w-full h-full border-none"
+          ></iframe>
+        )}
+      </div>
+    </motion.div>
+  );
+}
