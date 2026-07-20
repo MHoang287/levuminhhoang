@@ -245,12 +245,12 @@ function App() {
                 </div>
                 <div>
                   <p className="text-[10px] text-[var(--text-muted)] uppercase font-black tracking-widest mb-1 transition-colors">Spotify</p>
-                  <h3 className="text-lg md:text-xl font-black leading-tight text-[var(--text-primary)] transition-colors truncate">Không Buông</h3>
+                  <h3 className="text-lg md:text-xl font-black leading-tight text-[var(--text-primary)] transition-colors truncate">Tìm em</h3>
                   <p className="text-xs text-[var(--text-secondary)] font-medium transition-colors">Hngle</p>
                 </div>
               </div>
               <iframe 
-                src="https://open.spotify.com/embed/track/1ApIGNgp1azc0qB61x4GzG?utm_source=generator&theme=0" 
+                src="https://open.spotify.com/embed/track/6ELX356o21U28T73ZxruUj?utm_source=generator&theme=0" 
                 width="100%" 
                 height="100%" 
                 frameBorder="0" 
