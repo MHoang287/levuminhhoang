@@ -9,6 +9,7 @@ import GridGlow from './components/GridGlow';
 import SmoothScroll from './components/SmoothScroll';
 import FloatingContact from './components/FloatingContact';
 import Terminal from './components/Terminal';
+import Stickman from './components/Stickman';
 import { translations } from './translations';
 
 const containerVariants = {
@@ -91,6 +92,7 @@ function App() {
     <SmoothScroll>
       <div className="text-[var(--text-primary)] min-h-screen flex flex-col font-body-md bg-[var(--bg-color)] selection:bg-cyan-500/30 overflow-x-hidden relative transition-colors duration-500">
         <CustomCursor />
+        <Stickman />
         <GridGlow />
         <div className="noise-overlay" />
         

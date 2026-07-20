@@ -180,6 +180,11 @@ body {
   100% { transform: rotate(360deg); }
 }
 
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(15deg); }
+}
+
 .animate-marquee {
   display: inline-flex;
   animation: marquee 20s linear infinite;
