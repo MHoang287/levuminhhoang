@@ -77,7 +77,7 @@ export default function AboutMe() {
         <div className="flex flex-wrap justify-center md:justify-start gap-4 mb-6">
           <div className="flex items-center gap-2 text-[var(--text-muted)] text-xs font-bold uppercase tracking-widest bg-white/5 px-3 py-1.5 rounded-lg border border-white/5 transition-colors">
             <MapPin className="w-3.5 h-3.5 text-cyan-400" />
-            TP. Hồ Chí Minh
+            TP. Đồng Nai
           </div>
           <div className="flex items-center gap-2 text-[var(--text-muted)] text-xs font-bold uppercase tracking-widest bg-white/5 px-3 py-1.5 rounded-lg border border-white/5 transition-colors">
             <Calendar className="w-3.5 h-3.5 text-cyan-400" />
