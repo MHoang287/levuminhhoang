@@ -4,27 +4,27 @@ import { Code, Database, Globe, Layers, Cpu, Server, Terminal, Smartphone } from
 export default function Skills() {
   const skillCategories = [
     {
-      category: "Backend",
+      category: "Ngôn ngữ",
       icon: Server,
-      skills: ["ASP.NET Core", "Spring Boot", "Node.js"],
+      skills: ["Java", "C#", "Dart", "C", "JavaScript"],
       color: "cyan"
     },
     {
-      category: "Database",
-      icon: Database,
-      skills: ["MongoDB", "SQL Server", "MySQL"],
-      color: "purple"
-    },
-    {
-      category: "Frontend",
-      icon: Terminal,
-      skills: ["React", "TypeScript", "Tailwind"],
+      category: "Frameworks",
+      icon: Layers,
+      skills: ["ASP.NET Core", "Spring Boot", "Node.js", "Flutter", "ReactJS"],
       color: "blue"
     },
     {
-      category: "Công cụ",
+      category: "Databases",
+      icon: Database,
+      skills: ["SQL Server", "MySQL", "MongoDB"],
+      color: "purple"
+    },
+    {
+      category: "Tools & Core",
       icon: Cpu,
-      skills: ["Docker", "Git", "Postman"],
+      skills: ["Git", "GitHub", "Postman", "System Design"],
       color: "emerald"
     },
   ];

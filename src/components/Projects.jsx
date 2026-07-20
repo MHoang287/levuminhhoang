@@ -4,17 +4,17 @@ import { ArrowRight } from 'lucide-react';
 export default function Projects() {
   const projects = [
     {
-      title: "E-learning Platform",
+      title: "E-Learning Platform",
       tagline: "Hệ thống học trực tuyến quy mô nhỏ",
-      tech: ["ASP.NET Core", "SQL Server", "Momo API"],
-      description: "Tập trung giải pháp thanh toán và phân quyền người dùng phức tạp.",
+      tech: ["C#", "ASP.NET Core", "MS SQL Server", "Bootstrap", "SignalR", "MoMo API"],
+      description: "Hệ thống E-Learning tích hợp phân quyền RBAC (Admin, Teacher, Student), thanh toán Momo an toàn và chat/live-stream thời gian thực.",
       bg: "https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&q=80&w=800",
     },
     {
-      title: "Cinema Booking AI",
+      title: "Cinema Booking System",
       tagline: "Đặt vé xem phim thông minh",
-      tech: ["Java Spring Boot", "Gemini AI", "Google Maps"],
-      description: "Tích hợp AI Chatbot và định vị tối ưu hóa luồng mua vé.",
+      tech: ["Java", "Spring Boot", "MySQL", "MongoDB", "Google Maps API", "Gemini API", "ReactJS"],
+      description: "Hệ thống đặt vé tự động hóa phân bổ ghế, thanh toán checkout, tích hợp Google Maps tìm rạp gần nhất và chatbot hỗ trợ thông minh.",
       bg: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&q=80&w=800",
     },
   ];
