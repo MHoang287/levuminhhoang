@@ -1,15 +1,24 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FileText, Download, X, ExternalLink } from 'lucide-react';
+import { FileText, Download, X, ExternalLink, Languages } from 'lucide-react';
 
 export default function CVViewer() {
   const [isOpen, setIsOpen] = useState(false);
+  const [lang, setLang] = useState('VI'); // 'VI' or 'EN'
+
+  const cvPaths = {
+    VI: 'cv/LeVuMinhHoang_CV.pdf',
+    EN: 'cv/LeVuMinhHoang_ENGCV.pdf',
+  };
 
   return (
     <>
       {/* Nút Khám phá CV */}
       <motion.button
-        onClick={() => setIsOpen(true)}
+        onClick={() => {
+          setLang('VI');
+          setIsOpen(true);
+        }}
         className="group relative overflow-hidden bg-cyan-500/10 backdrop-blur-md text-cyan-400 px-10 py-4 rounded-2xl font-black text-sm uppercase tracking-[0.2em] border border-cyan-400/30 hover:shadow-[0_0_40px_rgba(0,255,255,0.3)] w-full md:w-auto"
         whileHover={{ scale: 1.05, y: -2 }}
         whileTap={{ scale: 0.95 }}
@@ -75,7 +84,7 @@ export default function CVViewer() {
 
                   <div className="flex flex-col">
                     <h2 className="text-xl md:text-2xl font-black tracking-tighter leading-none transition-colors" style={{ color: 'var(--text-primary)' }}>
-                      CURRICULUM VITAE
+                      {lang === 'VI' ? 'SƠ YẾU LÝ LỊCH' : 'CURRICULUM VITAE'}
                     </h2>
                     <div className="flex items-center gap-2 mt-2">
                       <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
@@ -87,8 +96,20 @@ export default function CVViewer() {
                 </div>
 
                 <div className="flex items-center gap-4">
+                  {/* Nút Translate/Dịch chuyển đổi ngôn ngữ */}
+                  <button
+                    onClick={() => setLang(lang === 'VI' ? 'EN' : 'VI')}
+                    className="flex items-center gap-2 px-4 py-3 rounded-xl transition-all duration-300 border text-[10px] font-black uppercase tracking-widest bg-cyan-500/10 hover:bg-cyan-500 hover:text-black border-cyan-400/30"
+                    style={{ 
+                      color: 'var(--text-primary)'
+                    }}
+                  >
+                    <Languages className="w-4 h-4" />
+                    <span>{lang === 'VI' ? 'Tiếng Anh (EN)' : 'Tiếng Việt (VI)'}</span>
+                  </button>
+
                   <a
-                    href="cv/LeVuMinhHoang_CV.pdf"
+                    href={cvPaths[lang]}
                     download
                     className="flex items-center gap-2 px-6 py-3 rounded-xl transition-all duration-300 border text-[10px] font-black uppercase tracking-widest group"
                     style={{ 
@@ -102,7 +123,7 @@ export default function CVViewer() {
                   </a>
 
                   <a
-                    href="cv/LeVuMinhHoang_CV.pdf"
+                    href={cvPaths[lang]}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-10 h-10 flex items-center justify-center rounded-xl border transition-all duration-300"
@@ -138,7 +159,8 @@ export default function CVViewer() {
                     }}
                   >
                     <iframe
-                      src="cv/LeVuMinhHoang_CV.pdf#view=FitH&toolbar=0"
+                      key={lang} // Buộc iframe reload lại khi thay đổi ngôn ngữ
+                      src={`${cvPaths[lang]}#view=FitH&toolbar=0`}
                       className="w-full h-full border-none shadow-inner"
                       title="CV Document Full Screen"
                     />
