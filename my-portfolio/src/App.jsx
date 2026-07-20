@@ -218,8 +218,9 @@ function App() {
               </div>
               <div>
                 <p className="text-[10px] text-cyan-400 font-bold uppercase tracking-[0.2em] mb-1 md:mb-2">Kinh nghiệm</p>
-                <h3 className="text-lg md:text-xl font-bold leading-tight group-hover:text-cyan-400 transition-colors">Thực tập sinh Backend</h3>
-                <p className="text-xs text-[var(--text-secondary)] mt-1 font-medium italic transition-colors">2026 - Hiện tại</p>
+                <h3 className="text-base md:text-lg font-bold leading-tight group-hover:text-cyan-400 transition-colors">IT Helpdesk Intern</h3>
+                <p className="text-xs text-[var(--text-secondary)] font-semibold transition-colors mt-0.5">WEB-PRO (VIETNAM)</p>
+                <p className="text-[10px] text-[var(--text-muted)] mt-1 font-medium transition-colors">Hỗ trợ kỹ thuật & giám sát hệ thống</p>
               </div>
             </motion.div>
 
