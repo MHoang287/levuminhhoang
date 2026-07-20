@@ -81,7 +81,7 @@ export default function AboutMe() {
           </div>
           <div className="flex items-center gap-2 text-[var(--text-muted)] text-xs font-bold uppercase tracking-widest bg-white/5 px-3 py-1.5 rounded-lg border border-white/5 transition-colors">
             <Calendar className="w-3.5 h-3.5 text-cyan-400" />
-            Sinh viên năm 4
+            Đang chờ tốt nghiệp
           </div>
         </div>
 
