@@ -3,7 +3,7 @@ import { MapPin, Calendar, FileText } from 'lucide-react';
 import CVViewer from './CVViewer';
 import avatar from '../assets/avt.jpg';
 
-export default function AboutMe() {
+export default function AboutMe({ lang, t }) {
   return (
     <motion.div
       className="bento-card h-full p-6 sm:p-8 md:p-10 flex flex-col md:flex-row items-center gap-8 md:gap-12 group overflow-hidden"
@@ -48,7 +48,7 @@ export default function AboutMe() {
             transition={{ duration: 2, repeat: Infinity }}
           />
           <div className="flex items-center">
-            Sẵn sàng
+            {t.ready}
             <div className="flex ml-0.5">
               {[0, 1, 2].map((i) => (
                 <motion.span
@@ -77,23 +77,24 @@ export default function AboutMe() {
         <div className="flex flex-wrap justify-center md:justify-start gap-4 mb-6">
           <div className="flex items-center gap-2 text-[var(--text-muted)] text-xs font-bold uppercase tracking-widest bg-white/5 px-3 py-1.5 rounded-lg border border-white/5 transition-colors">
             <MapPin className="w-3.5 h-3.5 text-cyan-400" />
-            TP. Đồng Nai
+            {t.location}
           </div>
           <div className="flex items-center gap-2 text-[var(--text-muted)] text-xs font-bold uppercase tracking-widest bg-white/5 px-3 py-1.5 rounded-lg border border-white/5 transition-colors">
             <Calendar className="w-3.5 h-3.5 text-cyan-400" />
-            Đang chờ tốt nghiệp
+            {t.statusCalendar}
           </div>
         </div>
 
         {/* Giới thiệu - Tăng trọng số chữ và chiều cao dòng */}
         <p className="text-[var(--text-secondary)] text-[15px] sm:text-base leading-relaxed mb-8 max-w-xl font-medium transition-colors">
-          Một <span className="text-[var(--text-primary)] font-bold border-b border-cyan-400/30">Backend Developer</span> đam mê xây dựng các hệ thống phía server hiệu năng cao. 
-          Kỹ năng chuyên sâu về thiết kế API và tối ưu hóa cấu trúc dữ liệu phức tạp.
+          {t.introText.split("Backend Developer")[0]}
+          <span className="text-[var(--text-primary)] font-bold border-b border-cyan-400/30">Backend Developer</span>
+          {t.introText.split("Backend Developer")[1] || ""}
         </p>
 
         {/* Nút hành động */}
         <div className="w-full sm:w-auto">
-          <CVViewer />
+          <CVViewer lang={lang} t={t} />
         </div>
       </div>
     </motion.div>

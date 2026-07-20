@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion';
 import { Code, Database, Globe, Layers, Cpu, Server, Terminal, Smartphone } from 'lucide-react';
 
-export default function Skills() {
+export default function Skills({ theme, t }) {
   const skillCategories = [
     {
-      category: "Ngôn ngữ",
+      category: t.skillsTitle === "Tech Stack" ? "Languages" : "Ngôn ngữ",
       icon: Server,
       skills: ["Java", "C#", "Dart", "C", "JavaScript"],
       color: "cyan"
@@ -40,7 +40,7 @@ export default function Skills() {
             <Layers className="w-5 h-5 text-cyan-400" />
           </div>
           <h3 className="text-[10px] font-black text-cyan-400 uppercase tracking-[0.3em]">
-            Kho tàng công nghệ
+            {t.skillsTitle}
           </h3>
         </div>
 

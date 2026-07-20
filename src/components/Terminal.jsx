@@ -2,13 +2,21 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Terminal as TerminalIcon } from 'lucide-react';
 
-export default function Terminal() {
+export default function Terminal({ t }) {
   const [input, setInput] = useState('');
   const [history, setHistory] = useState([
-    { type: 'system', content: 'LVMH System v1.0.0' },
-    { type: 'system', content: 'Gõ "help" để xem các lệnh có sẵn.' },
+    { type: 'system', content: t.sysTitle },
+    { type: 'system', content: t.sysHelp },
   ]);
   const scrollRef = useRef(null);
+
+  useEffect(() => {
+    // Reset terminal welcome when language changes
+    setHistory([
+      { type: 'system', content: t.sysTitle },
+      { type: 'system', content: t.sysHelp },
+    ]);
+  }, [t]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -17,12 +25,12 @@ export default function Terminal() {
   }, [history]);
 
   const commands = {
-    help: () => 'Các lệnh khả dụng: about, skills, contact, clear, date, whoami',
-    about: () => 'Lê Vũ Minh Hoàng - Backend Developer. Đam mê xây dựng hệ thống server-side.',
-    skills: () => 'Backend: ASP.NET Core, Spring Boot, Node.js. DB: MongoDB, SQL Server, MySQL.',
-    contact: () => 'Email: levuminhhoang.work@gmail.com | GitHub: MHoang287',
-    date: () => new Date().toLocaleString('vi-VN'),
-    whoami: () => 'Bạn là một khách quý đang ghé thăm portfolio của tôi!',
+    help: () => t.sysPromptHelp,
+    about: () => t.sysPromptAbout,
+    skills: () => t.sysPromptSkills,
+    contact: () => t.sysPromptContact,
+    date: () => new Date().toLocaleString(),
+    whoami: () => t.sysPromptWhoami,
     clear: () => {
       setHistory([]);
       return null;
@@ -41,7 +49,7 @@ export default function Terminal() {
             newHistory.push({ type: 'response', content: response });
           }
         } else {
-          newHistory.push({ type: 'response', content: `Lệnh không hợp lệ: ${cmd}. Gõ "help" để xem danh sách lệnh.` });
+          newHistory.push({ type: 'response', content: `${t.sysInvalid}: ${cmd}.` });
         }
       }
 

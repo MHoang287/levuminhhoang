@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Home, Code, Layers, Grid, Music, MapPin, Calendar, Sun, Moon } from 'lucide-react';
+import { Home, Code, Layers, Grid, Music, MapPin, Calendar, Sun, Moon, Languages } from 'lucide-react';
 import AboutMe from './components/AboutMe';
 import Skills from './components/Skills';
 import Projects from './components/Projects';
@@ -9,27 +9,28 @@ import GridGlow from './components/GridGlow';
 import SmoothScroll from './components/SmoothScroll';
 import FloatingContact from './components/FloatingContact';
 import Terminal from './components/Terminal';
+import { translations } from './translations';
 
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.3,
+      staggerChildren: 0.08,
+      delayChildren: 0.1,
     },
   },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 15 },
   visible: { 
     opacity: 1, 
     y: 0,
     transition: {
       type: "spring",
-      stiffness: 100,
-      damping: 12
+      stiffness: 120,
+      damping: 14
     }
   },
 };
@@ -38,14 +39,24 @@ function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
+  const [lang, setLang] = useState(localStorage.getItem('lang') || 'VI');
+  const [spotifyLoading, setSpotifyLoading] = useState(true);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
   }, [theme]);
 
+  useEffect(() => {
+    localStorage.setItem('lang', lang);
+  }, [lang]);
+
   const toggleTheme = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
+  };
+
+  const toggleLang = () => {
+    setLang(lang === 'VI' ? 'EN' : 'VI');
   };
 
   useEffect(() => {
@@ -68,10 +79,12 @@ function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const t = translations[lang];
+
   const navItems = [
-    { id: 'home', label: 'Trang chủ', icon: Home },
-    { id: 'projects', label: 'Dự án', icon: Code },
-    { id: 'skills', label: 'Kỹ năng', icon: Layers },
+    { id: 'home', label: t.navHome, icon: Home },
+    { id: 'projects', label: t.navProjects, icon: Code },
+    { id: 'skills', label: t.navSkills, icon: Layers },
   ];
 
   return (
@@ -86,18 +99,18 @@ function App() {
           <motion.div
             className="absolute -top-1/2 -left-1/4 w-[70%] h-[70%] bg-cyan-500/5 blur-[120px] rounded-full"
             animate={{
-              scale: [1, 1.2, 1],
-              opacity: theme === 'dark' ? [0.3, 0.5, 0.3] : [0.1, 0.2, 0.1],
+              scale: [1, 1.15, 1],
+              opacity: theme === 'dark' ? [0.3, 0.45, 0.3] : [0.1, 0.15, 0.1],
             }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
           />
           <motion.div
             className="absolute -bottom-1/2 -right-1/4 w-[70%] h-[70%] bg-purple-600/5 blur-[120px] rounded-full"
             animate={{
-              scale: [1.2, 1, 1.2],
-              opacity: theme === 'dark' ? [0.3, 0.5, 0.3] : [0.1, 0.2, 0.1],
+              scale: [1.15, 1, 1.15],
+              opacity: theme === 'dark' ? [0.3, 0.45, 0.3] : [0.1, 0.15, 0.1],
             }}
-            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
           />
         </div>
 
@@ -128,7 +141,7 @@ function App() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4, duration: 0.5 }}
               >
-                Backend Developer
+                {t.backendDev}
               </motion.span>
             </motion.div>
 
@@ -159,6 +172,17 @@ function App() {
                 ))}
               </div>
 
+              {/* Translate button */}
+              <motion.button
+                onClick={toggleLang}
+                className="w-12 h-12 rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)] flex items-center justify-center text-cyan-400 hover:bg-cyan-400/10 transition-all shadow-lg"
+                whileHover={{ scale: 1.1, rotate: 10 }}
+                whileTap={{ scale: 0.9 }}
+                title="Translate"
+              >
+                <Languages className="w-5 h-5" />
+              </motion.button>
+
               <motion.button
                 onClick={toggleTheme}
                 className="w-12 h-12 rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)] flex items-center justify-center text-cyan-400 hover:bg-cyan-400/10 transition-all shadow-lg"
@@ -171,6 +195,12 @@ function App() {
 
             {/* Mobile Header Controls */}
             <div className="md:hidden flex items-center gap-2">
+              <motion.button
+                onClick={toggleLang}
+                className="w-10 h-10 rounded-xl bg-[var(--card-bg)] border border-[var(--card-border)] flex items-center justify-center text-cyan-400"
+              >
+                <Languages className="w-4 h-4" />
+              </motion.button>
               <motion.button
                 onClick={toggleTheme}
                 className="w-10 h-10 rounded-xl bg-[var(--card-bg)] border border-[var(--card-border)] flex items-center justify-center text-cyan-400"
@@ -192,23 +222,23 @@ function App() {
             initial="hidden"
             animate="visible"
           >
-            {/* Block 1: Intro (Full width on Mobile, 2x2 on Desktop) */}
+            {/* Block 1: Intro */}
             <motion.div
               variants={itemVariants}
               className="col-span-1 md:col-span-2 lg:row-span-2"
             >
-              <AboutMe />
+              <AboutMe lang={lang} t={t} />
             </motion.div>
 
-            {/* Block 2: Skills (Full width on Mobile, 2x1 on Desktop) */}
+            {/* Block 2: Skills */}
             <motion.div
               variants={itemVariants}
               className="col-span-1 md:col-span-2 lg:row-span-1"
             >
-              <Skills theme={theme} />
+              <Skills theme={theme} t={t} />
             </motion.div>
 
-            {/* Block 3: Experience (1x1) */}
+            {/* Block 3: Experience */}
             <motion.div
               variants={itemVariants}
               className="col-span-1 lg:col-span-1 bento-card p-6 md:p-8 flex flex-col justify-between group cursor-pointer min-h-[180px]"
@@ -217,17 +247,17 @@ function App() {
                 <Calendar className="w-6 h-6 md:w-7 md:h-7 text-cyan-400 group-hover:scale-110 transition-transform" />
               </div>
               <div>
-                <p className="text-[10px] text-cyan-400 font-bold uppercase tracking-[0.2em] mb-1 md:mb-2">Kinh nghiệm</p>
-                <h3 className="text-base md:text-lg font-bold leading-tight group-hover:text-cyan-400 transition-colors">IT Helpdesk Intern</h3>
-                <p className="text-xs text-[var(--text-secondary)] font-semibold transition-colors mt-0.5">WEB-PRO (VIETNAM)</p>
-                <p className="text-[10px] text-[var(--text-muted)] mt-1 font-medium transition-colors">Hỗ trợ kỹ thuật & giám sát hệ thống</p>
+                <p className="text-[10px] text-cyan-400 font-bold uppercase tracking-[0.2em] mb-1 md:mb-2">{t.experienceTitle}</p>
+                <h3 className="text-base md:text-lg font-bold leading-tight group-hover:text-cyan-400 transition-colors">{t.experienceRole}</h3>
+                <p className="text-xs text-[var(--text-secondary)] font-semibold transition-colors mt-0.5">{t.experienceCompany}</p>
+                <p className="text-[10px] text-[var(--text-muted)] mt-1 font-medium transition-colors">{t.experienceDesc}</p>
               </div>
             </motion.div>
 
-            {/* Block 4: Spotify (1x1) */}
+            {/* Block 4: Spotify */}
             <motion.div
               variants={itemVariants}
-              className="col-span-1 lg:col-span-1 bento-card group overflow-hidden min-h-[180px]"
+              className="col-span-1 lg:col-span-1 bento-card group overflow-hidden min-h-[180px] relative"
             >
               <div className="absolute inset-0 z-10 pointer-events-none group-hover:opacity-0 transition-opacity duration-500 p-6 md:p-8 flex flex-col justify-between bg-[var(--card-bg)] backdrop-blur-xl">
                 <div className="flex justify-between items-start">
@@ -240,42 +270,52 @@ function App() {
                       <span className="w-0.5 h-3 bg-[#1DB954] animate-[music-bar_1.2s_ease-in-out_infinite]"></span>
                       <span className="w-0.5 h-2 bg-[#1DB954] animate-[music-bar_1s_ease-in-out_infinite]"></span>
                     </span>
-                    <span className="text-[8px] font-black text-[#1DB954] uppercase tracking-widest">Đang nghe</span>
+                    <span className="text-[8px] font-black text-[#1DB954] uppercase tracking-widest">{t.spotifyPlaying}</span>
                   </div>
                 </div>
                 <div>
-                  <p className="text-[10px] text-[var(--text-muted)] uppercase font-black tracking-widest mb-1 transition-colors">Spotify</p>
-                  <h3 className="text-lg md:text-xl font-black leading-tight text-[var(--text-primary)] transition-colors truncate">Tìm em</h3>
-                  <p className="text-xs text-[var(--text-secondary)] font-medium transition-colors">Hngle</p>
+                  <p className="text-[10px] text-[var(--text-muted)] uppercase font-black tracking-widest mb-1 transition-colors">{t.spotifyTitle}</p>
+                  <h3 className="text-lg md:text-xl font-black leading-tight text-[var(--text-primary)] transition-colors truncate">{t.spotifySong}</h3>
+                  <p className="text-xs text-[var(--text-secondary)] font-medium transition-colors">{t.spotifyArtist}</p>
                 </div>
               </div>
-              <iframe 
-                src="https://open.spotify.com/embed/track/6ELX356o21U28T73ZxruUj?utm_source=generator&theme=0" 
-                width="100%" 
-                height="100%" 
-                frameBorder="0" 
-                allowFullScreen="" 
-                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-                loading="lazy"
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20"
-              ></iframe>
+              
+              {/* Spotify IFrame Loader Wrapper to fix 504 Gateway errors & prevent layout freezes */}
+              <div className="w-full h-full absolute inset-0 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center bg-black/60">
+                {spotifyLoading && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/80 z-30 pointer-events-none">
+                    <div className="w-6 h-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
+                  </div>
+                )}
+                <iframe 
+                  src="https://open.spotify.com/embed/track/6ELX356o21U28T73ZxruUj?utm_source=generator&theme=0" 
+                  width="100%" 
+                  height="100%" 
+                  frameBorder="0" 
+                  allowFullScreen="" 
+                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                  loading="lazy"
+                  onLoad={() => setSpotifyLoading(false)}
+                  className="w-full h-full border-none"
+                ></iframe>
+              </div>
             </motion.div>
 
-            {/* Block 5: Terminal (Full width) */}
+            {/* Block 5: Terminal */}
             <motion.div
               variants={itemVariants}
               className="col-span-1 md:col-span-2 lg:col-span-4 h-[250px] md:h-[300px]"
             >
-              <Terminal />
+              <Terminal t={t} />
             </motion.div>
 
-            {/* Block 6: Projects (Full width) */}
+            {/* Block 6: Projects */}
             <motion.div
               variants={itemVariants}
               className="col-span-1 md:col-span-2 lg:col-span-4"
               id="projects"
             >
-              <Projects />
+              <Projects t={t} />
             </motion.div>
           </motion.div>
         </main>
@@ -292,7 +332,7 @@ function App() {
           <div className="flex flex-col md:flex-row justify-between items-center gap-8 px-8 md:px-12 max-w-screen-2xl mx-auto text-[var(--text-primary)] transition-colors text-center md:text-left">
             <div className="flex flex-col items-center md:items-start">
               <span className="text-xl font-black tracking-tighter">LVMH</span>
-              <p className="text-xs text-[var(--text-muted)] mt-1 uppercase tracking-widest font-bold transition-colors">Backend Developer Portfolio</p>
+              <p className="text-xs text-[var(--text-muted)] mt-1 uppercase tracking-widest font-bold transition-colors">{t.footerText}</p>
             </div>
             
             <div className="flex flex-wrap justify-center gap-6 md:gap-8">

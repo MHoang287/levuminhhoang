@@ -1,20 +1,24 @@
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
-export default function Projects() {
+export default function Projects({ t }) {
   const projects = [
     {
       title: "E-Learning Platform",
-      tagline: "Hệ thống học trực tuyến quy mô nhỏ",
+      tagline: t.projectsFeatured === "Featured Project" ? "Small-scale online learning system" : "Hệ thống học trực tuyến quy mô nhỏ",
       tech: ["C#", "ASP.NET Core", "MS SQL Server", "Bootstrap", "SignalR", "MoMo API"],
-      description: "Hệ thống E-Learning tích hợp phân quyền RBAC (Admin, Teacher, Student), thanh toán Momo an toàn và chat/live-stream thời gian thực.",
+      description: t.projectsFeatured === "Featured Project" 
+        ? "E-Learning platform featuring RBAC (Admin, Teacher, Student), secure Momo payment integration, and real-time chat/live-streaming modules."
+        : "Hệ thống E-Learning tích hợp phân quyền RBAC (Admin, Teacher, Student), thanh toán Momo an toàn và chat/live-stream thời gian thực.",
       bg: "https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&q=80&w=800",
     },
     {
       title: "Cinema Booking System",
-      tagline: "Đặt vé xem phim thông minh",
+      tagline: t.projectsFeatured === "Featured Project" ? "Intelligent cinema ticket reservation" : "Đặt vé xem phim thông minh",
       tech: ["Java", "Spring Boot", "MySQL", "MongoDB", "Google Maps API", "Gemini API", "ReactJS"],
-      description: "Hệ thống đặt vé tự động hóa phân bổ ghế, thanh toán checkout, tích hợp Google Maps tìm rạp gần nhất và chatbot hỗ trợ thông minh.",
+      description: t.projectsFeatured === "Featured Project"
+        ? "Ticket reservation system automating seat allocation and transaction checkout, integrated with Google Maps radius searching and a smart Gemini chatbot."
+        : "Hệ thống đặt vé tự động hóa phân bổ ghế, thanh toán checkout, tích hợp Google Maps tìm rạp gần nhất và chatbot hỗ trợ thông minh.",
       bg: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&q=80&w=800",
     },
   ];
@@ -37,7 +41,7 @@ export default function Projects() {
           <div className="relative z-10 p-6 md:p-8 h-full flex flex-col justify-end">
             <div className="flex items-center gap-2 mb-4">
               <span className={`px-3 py-1 rounded-full ${index === 1 ? 'bg-cyan-400/10 border-cyan-400/20 text-cyan-400' : 'bg-blue-400/10 border-blue-400/20 text-blue-400'} border text-[9px] font-black uppercase tracking-widest`}>
-                {index === 1 ? 'Dự án tiêu biểu' : 'Ứng dụng Web'}
+                {index === 1 ? t.projectsFeatured : t.projectsWeb}
               </span>
             </div>
 
@@ -61,7 +65,7 @@ export default function Projects() {
               className="flex items-center gap-2 text-sm font-bold text-[var(--text-primary)] group/btn"
               whileHover={{ x: 5 }}
             >
-              Xem chi tiết
+              {t.projectsDetail}
               <ArrowRight className={`w-4 h-4 ${index === 1 ? 'text-cyan-400' : 'text-blue-400'} group-hover/btn:translate-x-1 transition-transform`} />
             </motion.button>
           </div>
