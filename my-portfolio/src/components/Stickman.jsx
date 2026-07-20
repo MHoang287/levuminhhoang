@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 export default function Stickman() {
   const [position, setPosition] = useState({ x: -100, y: 0 });
   const [direction, setDirection] = useState(1); // 1 = right, -1 = left
-  const [state, setState] = useState('walking'); // 'walking', 'jumping', 'waving'
+  const [state, setState] = useState('narutorun'); // 'narutorun', 'moonwalk'
 
   useEffect(() => {
     // Stickman placement: walks on top of the footer/bottom of the page
@@ -16,10 +16,12 @@ export default function Stickman() {
     updateYPosition();
     window.addEventListener('resize', updateYPosition);
 
-    // Walking animation loop
+    // Animation & movement loop
     const interval = setInterval(() => {
       setPosition(prev => {
-        let newX = prev.x + (direction * 4);
+        // Speed config: Naruto run is very fast (speed 9), Moonwalk is slow and goes backwards relative to face direction!
+        let speed = state === 'narutorun' ? 9 : -2.5; 
+        let newX = prev.x + (direction * speed);
         let newDir = direction;
 
         // Bounce back at screen boundaries
@@ -31,13 +33,9 @@ export default function Stickman() {
           newX = -100;
         }
 
-        // Randomly change state
-        if (Math.random() < 0.02) {
-          setState(prev => {
-            const states = ['walking', 'jumping', 'waving'];
-            const next = states[Math.floor(Math.random() * states.length)];
-            return next;
-          });
+        // Randomly switch states between narutorun and moonwalk
+        if (Math.random() < 0.015) {
+          setState(prev => prev === 'narutorun' ? 'moonwalk' : 'narutorun');
         }
 
         return { x: newX, y: prev.y, direction: newDir };
@@ -48,7 +46,7 @@ export default function Stickman() {
       window.removeEventListener('resize', updateYPosition);
       clearInterval(interval);
     };
-  }, [direction]);
+  }, [direction, state]);
 
   // Keep state matching direction
   useEffect(() => {
@@ -58,101 +56,111 @@ export default function Stickman() {
   }, [position.x]);
 
   const handleStickmanClick = () => {
-    setState('jumping');
-    setTimeout(() => setState('waving'), 800);
-    setTimeout(() => setState('walking'), 2000);
+    // Switch state on click
+    setState(prev => prev === 'narutorun' ? 'moonwalk' : 'narutorun');
   };
 
-  // SVG lines representing stickman limbs coordinates based on state
   return (
     <motion.div
       onClick={handleStickmanClick}
       animate={{
         x: position.x,
-        y: state === 'jumping' ? position.y - 45 : position.y,
+        y: position.y,
         scaleX: direction,
       }}
       transition={{
         type: "tween",
         ease: "linear",
         duration: 0.04,
-        y: { type: "spring", stiffness: 300, damping: 15 }
       }}
       className="fixed z-[9999] cursor-pointer select-none pointer-events-auto"
       style={{ width: 80, height: 80 }}
     >
       <svg viewBox="0 0 100 120" className="w-full h-full filter drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]">
-        {/* Head */}
-        <circle cx="50" cy="30" r="10" fill="none" stroke="#22d3ee" strokeWidth="4" />
-        
-        {/* Body */}
-        <line x1="50" y1="40" x2="50" y2="70" stroke="#22d3ee" strokeWidth="4" />
+        {state === 'narutorun' ? (
+          /* Naruto Run: Body leans forward significantly, arms straight back */
+          <g>
+            {/* Head (tilted forward) */}
+            <circle cx="58" cy="28" r="9" fill="none" stroke="#22d3ee" strokeWidth="4" />
+            
+            {/* Body (Leaning forward at 45 deg) */}
+            <line x1="58" y1="37" x2="40" y2="65" stroke="#22d3ee" strokeWidth="4" />
 
-        {/* Arms */}
-        {state === 'waving' ? (
-          <>
-            <path d="M 50 48 Q 65 35 75 20" fill="none" stroke="#22d3ee" strokeWidth="4" strokeLinecap="round" className="animate-[wiggle_0.5s_ease-in-out_infinite]" />
-            <line x1="50" y1="48" x2="25" y2="58" stroke="#22d3ee" strokeWidth="4" strokeLinecap="round" />
-          </>
-        ) : state === 'jumping' ? (
-          <>
-            <line x1="50" y1="45" x2="80" y2="25" stroke="#22d3ee" strokeWidth="4" strokeLinecap="round" />
-            <line x1="50" y1="45" x2="20" y2="25" stroke="#22d3ee" strokeWidth="4" strokeLinecap="round" />
-          </>
-        ) : (
-          /* Walking arms movement */
-          <>
-            <motion.line
-              x1="50" y1="48"
-              animate={{ x2: [30, 70, 30], y2: [62, 55, 62] }}
-              transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }}
-              stroke="#22d3ee" strokeWidth="4" strokeLinecap="round"
-            />
-            <motion.line
-              x1="50" y1="48"
-              animate={{ x2: [70, 30, 70], y2: [55, 62, 55] }}
-              transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }}
-              stroke="#22d3ee" strokeWidth="4" strokeLinecap="round"
-            />
-          </>
-        )}
+            {/* Naruto Arms (both pointing straight back behind the runner) */}
+            <line x1="48" y1="48" x2="15" y2="40" stroke="#22d3ee" strokeWidth="4" strokeLinecap="round" />
+            <line x1="48" y1="48" x2="12" y2="46" stroke="#22d3ee" strokeWidth="4" strokeLinecap="round" />
 
-        {/* Legs */}
-        {state === 'jumping' ? (
-          <>
-            <line x1="50" y1="70" x2="35" y2="85" stroke="#22d3ee" strokeWidth="4" strokeLinecap="round" />
-            <line x1="35" y1="85" x2="40" y2="100" stroke="#22d3ee" strokeWidth="4" strokeLinecap="round" />
-            <line x1="50" y1="70" x2="65" y2="85" stroke="#22d3ee" strokeWidth="4" strokeLinecap="round" />
-            <line x1="65" y1="85" x2="60" y2="100" stroke="#22d3ee" strokeWidth="4" strokeLinecap="round" />
-          </>
-        ) : (
-          /* Walking legs animation */
-          <>
+            {/* Fast running legs animation */}
             <motion.path
               animate={{
                 d: [
-                  "M 50 70 L 35 90 L 25 108",
-                  "M 50 70 L 50 90 L 55 108",
-                  "M 50 70 L 65 90 L 75 108",
-                  "M 50 70 L 35 90 L 25 108"
+                  "M 40 65 L 25 80 L 15 98",
+                  "M 40 65 L 42 85 L 50 102",
+                  "M 40 65 L 55 78 L 70 95",
+                  "M 40 65 L 25 80 L 15 98"
                 ]
               }}
-              transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }}
+              transition={{ repeat: Infinity, duration: 0.25, ease: "linear" }}
               fill="none" stroke="#22d3ee" strokeWidth="4" strokeLinecap="round"
             />
             <motion.path
               animate={{
                 d: [
-                  "M 50 70 L 65 90 L 75 108",
-                  "M 50 70 L 35 90 L 25 108",
-                  "M 50 70 L 50 90 L 55 108",
-                  "M 50 70 L 65 90 L 75 108"
+                  "M 40 65 L 55 78 L 70 95",
+                  "M 40 65 L 25 80 L 15 98",
+                  "M 40 65 L 42 85 L 50 102",
+                  "M 40 65 L 55 78 L 70 95"
                 ]
               }}
-              transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }}
+              transition={{ repeat: Infinity, duration: 0.25, ease: "linear" }}
               fill="none" stroke="#22d3ee" strokeWidth="4" strokeLinecap="round"
             />
-          </>
+          </g>
+        ) : (
+          /* Moonwalk: Leans slightly back/upright, moves backwards, arms pose, legs sliding */
+          <g>
+            {/* Head (nodding animation) */}
+            <motion.circle 
+              cx="50" 
+              animate={{ cy: [28, 31, 28] }}
+              transition={{ repeat: Infinity, duration: 0.5, ease: "easeInOut" }}
+              r="9" fill="none" stroke="#22d3ee" strokeWidth="4" 
+            />
+            
+            {/* Body */}
+            <line x1="50" y1="37" x2="50" y2="70" stroke="#22d3ee" strokeWidth="4" />
+
+            {/* Moonwalk arms pose (Holding hat or cool stance) */}
+            <line x1="50" y1="45" x2="68" y2="35" stroke="#22d3ee" strokeWidth="4" strokeLinecap="round" />
+            <line x1="68" y1="35" x2="65" y2="20" stroke="#22d3ee" strokeWidth="4" strokeLinecap="round" /> {/* Hand touching hat area */}
+            <line x1="50" y1="45" x2="28" y2="60" stroke="#22d3ee" strokeWidth="4" strokeLinecap="round" />
+
+            {/* Moonwalk Sliding legs movement */}
+            <motion.path
+              animate={{
+                d: [
+                  "M 50 70 L 40 90 L 30 108",   // Flat slide leg
+                  "M 50 70 L 50 90 L 60 108",   // Bent pop leg
+                  "M 50 70 L 60 90 L 70 108",   // Lifted slide leg
+                  "M 50 70 L 40 90 L 30 108"
+                ]
+              }}
+              transition={{ repeat: Infinity, duration: 0.5, ease: "linear" }}
+              fill="none" stroke="#22d3ee" strokeWidth="4" strokeLinecap="round"
+            />
+            <motion.path
+              animate={{
+                d: [
+                  "M 50 70 L 60 90 L 70 108",
+                  "M 50 70 L 40 90 L 30 108",
+                  "M 50 70 L 50 90 L 60 108",
+                  "M 50 70 L 60 90 L 70 108"
+                ]
+              }}
+              transition={{ repeat: Infinity, duration: 0.5, ease: "linear" }}
+              fill="none" stroke="#22d3ee" strokeWidth="4" strokeLinecap="round"
+            />
+          </g>
         )}
       </svg>
     </motion.div>
