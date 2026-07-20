@@ -4,12 +4,14 @@ import { motion } from 'framer-motion';
 export default function Stickman() {
   const [position, setPosition] = useState({ x: -100, y: 0 });
   const [direction, setDirection] = useState(1); // 1 = right, -1 = left
-  const [state, setState] = useState('narutorun'); // 'narutorun', 'moonwalk'
+  const [state, setState] = useState('narutorun'); // 'narutorun', 'moonwalk', 'ninja-jump', 'ceiling-hang'
+  const [jumpOffset, setJumpOffset] = useState(0);
+  const [rotation, setRotation] = useState(0);
 
   useEffect(() => {
-    // Stickman placement: walks on top of the footer/bottom of the page
+    // Placement near bottom of viewport
     const updateYPosition = () => {
-      const bottomBound = window.innerHeight - 80;
+      const bottomBound = window.innerHeight - 90;
       setPosition(prev => ({ ...prev, y: bottomBound }));
     };
 
@@ -19,8 +21,11 @@ export default function Stickman() {
     // Animation & movement loop
     const interval = setInterval(() => {
       setPosition(prev => {
-        // Speed config: Naruto run is very fast (speed 9), Moonwalk is slow and goes backwards relative to face direction!
-        let speed = state === 'narutorun' ? 9 : -2.5; 
+        let speed = 4;
+        if (state === 'narutorun') speed = 8.5;
+        if (state === 'moonwalk') speed = -2.5;
+        if (state === 'ceiling-hang') speed = 3; // slower crawl
+
         let newX = prev.x + (direction * speed);
         let newDir = direction;
 
@@ -33,8 +38,42 @@ export default function Stickman() {
           newX = -100;
         }
 
-        // Randomly switch states between narutorun and moonwalk
-        if (Math.random() < 0.015) {
+        // Randomly trigger Ninja Jump or Ceiling Hang to wander UI without cluttering center screen
+        if (Math.random() < 0.01 && state !== 'ninja-jump' && state !== 'ceiling-hang') {
+          const rand = Math.random();
+          if (rand < 0.6) {
+            // Initiate a cool backflip jump
+            setState('ninja-jump');
+            setRotation(direction === 1 ? 360 : -360);
+            
+            // Simulating high jump arc
+            let t = 0;
+            const jumpInt = setInterval(() => {
+              t += 0.08;
+              const height = Math.sin(t * Math.PI) * 220; // jump up to 220px high
+              setJumpOffset(-height);
+              if (t >= 1) {
+                clearInterval(jumpInt);
+                setJumpOffset(0);
+                setRotation(0);
+                setState('narutorun');
+              }
+            }, 30);
+          } else {
+            // Climb/jump to ceiling for a brief crawl
+            setState('ceiling-hang');
+            setJumpOffset(-(window.innerHeight - 150)); // Jump to ceiling
+            
+            setTimeout(() => {
+              // Fall back down smoothly
+              setJumpOffset(0);
+              setState('narutorun');
+            }, 4500);
+          }
+        }
+
+        // State cycles
+        if (Math.random() < 0.008 && state !== 'ninja-jump' && state !== 'ceiling-hang') {
           setState(prev => prev === 'narutorun' ? 'moonwalk' : 'narutorun');
         }
 
@@ -56,8 +95,23 @@ export default function Stickman() {
   }, [position.x]);
 
   const handleStickmanClick = () => {
-    // Switch state on click
-    setState(prev => prev === 'narutorun' ? 'moonwalk' : 'narutorun');
+    // Manual jump trigger
+    if (state !== 'ninja-jump') {
+      setState('ninja-jump');
+      setRotation(direction === 1 ? 360 : -360);
+      let t = 0;
+      const jumpInt = setInterval(() => {
+        t += 0.07;
+        const height = Math.sin(t * Math.PI) * 260; // Extra high click jump
+        setJumpOffset(-height);
+        if (t >= 1) {
+          clearInterval(jumpInt);
+          setJumpOffset(0);
+          setRotation(0);
+          setState('narutorun');
+        }
+      }, 25);
+    }
   };
 
   return (
@@ -65,13 +119,16 @@ export default function Stickman() {
       onClick={handleStickmanClick}
       animate={{
         x: position.x,
-        y: position.y,
+        y: position.y + jumpOffset,
         scaleX: direction,
+        rotate: rotation,
+        scaleY: state === 'ceiling-hang' ? -1 : 1, // Flips upside down on ceiling
       }}
       transition={{
         type: "tween",
         ease: "linear",
         duration: 0.04,
+        rotate: { type: "tween", duration: 0.6, ease: "easeInOut" }
       }}
       className="fixed z-[9999] cursor-pointer select-none pointer-events-auto"
       style={{ width: 80, height: 80 }}
@@ -113,6 +170,70 @@ export default function Stickman() {
                 ]
               }}
               transition={{ repeat: Infinity, duration: 0.25, ease: "linear" }}
+              fill="none" stroke="#22d3ee" strokeWidth="4" strokeLinecap="round"
+            />
+          </g>
+        ) : state === 'ninja-jump' ? (
+          /* Ninja Jump: tucked backflip/somersault look */
+          <g>
+            <circle cx="50" cy="40" r="9" fill="none" stroke="#22d3ee" strokeWidth="4" />
+            <line x1="50" y1="49" x2="50" y2="70" stroke="#22d3ee" strokeWidth="4" />
+            {/* Tucked arms */}
+            <path d="M 50 54 Q 70 54 60 70" fill="none" stroke="#22d3ee" strokeWidth="4" strokeLinecap="round" />
+            <path d="M 50 54 Q 30 54 40 70" fill="none" stroke="#22d3ee" strokeWidth="4" strokeLinecap="round" />
+            {/* Tucked legs */}
+            <path d="M 50 70 Q 65 85 50 95" fill="none" stroke="#22d3ee" strokeWidth="4" strokeLinecap="round" />
+            <path d="M 50 70 Q 35 85 50 95" fill="none" stroke="#22d3ee" strokeWidth="4" strokeLinecap="round" />
+          </g>
+        ) : state === 'ceiling-hang' ? (
+          /* Ceiling hang/climb: Crawling look, upside down (scaleY flips it, so keep standard coordinates) */
+          <g>
+            <circle cx="50" cy="30" r="9" fill="none" stroke="#22d3ee" strokeWidth="4" />
+            <line x1="50" y1="39" x2="50" y2="70" stroke="#22d3ee" strokeWidth="4" />
+            {/* Crawling arms touching ceiling */}
+            <motion.path
+              animate={{
+                d: [
+                  "M 50 45 L 30 20 L 10 10",
+                  "M 50 45 L 35 25 L 20 10",
+                  "M 50 45 L 30 20 L 10 10"
+                ]
+              }}
+              transition={{ repeat: Infinity, duration: 0.4, ease: "linear" }}
+              fill="none" stroke="#22d3ee" strokeWidth="4" strokeLinecap="round"
+            />
+            <motion.path
+              animate={{
+                d: [
+                  "M 50 45 L 70 20 L 90 10",
+                  "M 50 45 L 65 25 L 80 10",
+                  "M 50 45 L 70 20 L 90 10"
+                ]
+              }}
+              transition={{ repeat: Infinity, duration: 0.4, ease: "linear" }}
+              fill="none" stroke="#22d3ee" strokeWidth="4" strokeLinecap="round"
+            />
+            {/* Crawling legs */}
+            <motion.path
+              animate={{
+                d: [
+                  "M 50 70 L 35 85 L 25 105",
+                  "M 50 70 L 40 80 L 35 95",
+                  "M 50 70 L 35 85 L 25 105"
+                ]
+              }}
+              transition={{ repeat: Infinity, duration: 0.4, ease: "linear" }}
+              fill="none" stroke="#22d3ee" strokeWidth="4" strokeLinecap="round"
+            />
+            <motion.path
+              animate={{
+                d: [
+                  "M 50 70 L 65 85 L 75 105",
+                  "M 50 70 L 60 80 L 65 95",
+                  "M 50 70 L 65 85 L 75 105"
+                ]
+              }}
+              transition={{ repeat: Infinity, duration: 0.4, ease: "linear" }}
               fill="none" stroke="#22d3ee" strokeWidth="4" strokeLinecap="round"
             />
           </g>
