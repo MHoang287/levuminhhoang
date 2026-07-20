@@ -257,9 +257,9 @@ function App() {
             {/* Block 4: Spotify */}
             <motion.div
               variants={itemVariants}
-              className="col-span-1 lg:col-span-1 bento-card group overflow-hidden min-h-[180px] relative"
+              className="col-span-1 lg:col-span-1 bento-card group overflow-hidden min-h-[180px] relative cursor-pointer"
             >
-              <div className="absolute inset-0 z-10 pointer-events-none group-hover:opacity-0 transition-opacity duration-500 p-6 md:p-8 flex flex-col justify-between bg-[var(--card-bg)] backdrop-blur-xl">
+              <div className="absolute inset-0 z-10 p-6 md:p-8 flex flex-col justify-between bg-[var(--card-bg)] backdrop-blur-xl">
                 <div className="flex justify-between items-start">
                   <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-[#1DB954]/10 flex items-center justify-center border border-[#1DB954]/20">
                     <Music className="w-5 h-5 md:w-6 md:h-6 text-[#1DB954]" />
@@ -280,13 +280,8 @@ function App() {
                 </div>
               </div>
               
-              {/* Spotify IFrame Loader Wrapper to fix 504 Gateway errors & prevent layout freezes */}
-              <div className="w-full h-full absolute inset-0 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center bg-black/60">
-                {spotifyLoading && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/80 z-30 pointer-events-none">
-                    <div className="w-6 h-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
-                  </div>
-                )}
+              {/* Load Spotify player dynamically only on hover/click to completely bypass initial network freeze/504 errors */}
+              <div className="w-full h-full absolute inset-0 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center bg-black/80">
                 <iframe 
                   src="https://open.spotify.com/embed/track/6ELX356o21U28T73ZxruUj?utm_source=generator&theme=0" 
                   width="100%" 
@@ -295,7 +290,6 @@ function App() {
                   allowFullScreen="" 
                   allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
                   loading="lazy"
-                  onLoad={() => setSpotifyLoading(false)}
                   className="w-full h-full border-none"
                 ></iframe>
               </div>
